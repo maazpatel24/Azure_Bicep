@@ -45,6 +45,10 @@ module NIC './modules/nic.bicep' = {
     publicIPid: PublicIP.outputs.publicIPid
     subnetId: vnet.outputs.subnetId
   }
+  dependsOn: [
+    PublicIP
+    vnet
+  ]
 }
 
 // Creating VirtualMachine
@@ -57,6 +61,10 @@ module VM './modules/vm.bicep' = {
     networkInterfaceId: NIC.outputs.networkInterfaceId
     storageAccount_storageUri: StorageAccount.outputs.storageURI
   }
+  dependsOn: [
+    NIC
+    StorageAccount
+  ]
 }
 
 
