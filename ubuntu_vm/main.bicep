@@ -1,5 +1,11 @@
 // az deployment group create --resource-group sa1_test_eic_MaazPatel --template-file ./ubuntu_vm/main.bicep
 
+// az deployment group create \
+//   --resource-group sa1_test_eic_MaazPatel \
+//   --mode Complete \
+//   --confirm-with-what-if \
+//   --template-file ./ubuntu_vm/main.bicep
+
 @description('Username for the Virtual Machine.')
 param adminUsername string
 
