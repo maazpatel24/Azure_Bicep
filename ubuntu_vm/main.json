@@ -1,0 +1,423 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.27.1.19265",
+      "templateHash": "6412615564414236346"
+    }
+  },
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Virtual Machine."
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 12,
+      "metadata": {
+        "description": "Password for the Virtual Machine."
+      }
+    },
+    "rglocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "variables": {
+    "storageAccountName": "[format('bicep{0}', uniqueString(resourceGroup().id))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[variables('storageAccountName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('rglocation')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "13806821549449620990"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "storageAccountName": "[format('bicep{0}', uniqueString(resourceGroup().id))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2023-04-01",
+              "name": "[variables('storageAccountName')]",
+              "location": "[parameters('location')]",
+              "kind": "StorageV2",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "tags": {
+                "Resource_Owner": "Maaz Patel",
+                "Delivery_Manager": "Shriram Deshpande",
+                "Sub_Business_Unit": "PES-IA",
+                "Business_Unit": "Einfochips",
+                "Project_Name": "Training and learning",
+                "Create_Date": "21 May 2024"
+              }
+            }
+          ],
+          "outputs": {
+            "storageURI": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2023-04-01').primaryEndpoints.blob]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "bicep_PublicIP",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('rglocation')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "1503323345176370622"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2023-11-01",
+              "name": "bicep_PublicIP",
+              "location": "[parameters('location')]",
+              "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                  "domainNameLabel": "dnsname"
+                }
+              },
+              "tags": {
+                "Resource_Owner": "Maaz Patel",
+                "Delivery_Manager": "Shriram Deshpande",
+                "Sub_Business_Unit": "PES-IA",
+                "Business_Unit": "Einfochips",
+                "Project_Name": "Training and learning",
+                "Create_Date": "21 May 2024"
+              }
+            }
+          ],
+          "outputs": {
+            "publicIPid": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/publicIPAddresses', 'bicep_PublicIP')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "bicep_VNET",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('rglocation')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "10811205553558264402"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2023-11-01",
+              "name": "bicep_VNET",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "10.0.0.0/16"
+                  ]
+                },
+                "subnets": [
+                  {
+                    "name": "Subnet-1",
+                    "properties": {
+                      "addressPrefix": "10.0.0.0/24"
+                    }
+                  }
+                ]
+              },
+              "tags": {
+                "Resource_Owner": "Maaz Patel",
+                "Delivery_Manager": "Shriram Deshpande",
+                "Sub_Business_Unit": "PES-IA",
+                "Business_Unit": "Einfochips",
+                "Project_Name": "Training and learning",
+                "Create_Date": "21 May 2024"
+              }
+            }
+          ],
+          "outputs": {
+            "subnetId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'bicep_VNET'), '2023-11-01').subnets[0].id]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "bicep_NIC",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('rglocation')]"
+          },
+          "publicIPid": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'bicep_PublicIP'), '2022-09-01').outputs.publicIPid.value]"
+          },
+          "subnetId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'bicep_VNET'), '2022-09-01').outputs.subnetId.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "13946331230914300422"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "publicIPid": {
+              "type": "string"
+            },
+            "subnetId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "apiVersion": "2023-11-01",
+              "name": "bicep_NIC",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "ipconfig1",
+                    "properties": {
+                      "privateIPAllocationMethod": "Dynamic",
+                      "publicIPAddress": {
+                        "id": "[parameters('publicIPid')]"
+                      },
+                      "subnet": {
+                        "id": "[parameters('subnetId')]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "tags": {
+                "Resource_Owner": "Maaz Patel",
+                "Delivery_Manager": "Shriram Deshpande",
+                "Sub_Business_Unit": "PES-IA",
+                "Business_Unit": "Einfochips",
+                "Project_Name": "Training and learning",
+                "Create_Date": "21 May 2024"
+              }
+            }
+          ],
+          "outputs": {
+            "networkInterfaceId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/networkInterfaces', 'bicep_NIC')]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'bicep_PublicIP')]",
+        "[resourceId('Microsoft.Resources/deployments', 'bicep_VNET')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "try_VM",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('rglocation')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "networkInterfaceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'bicep_NIC'), '2022-09-01').outputs.networkInterfaceId.value]"
+          },
+          "storageAccount_storageUri": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('storageAccountName')), '2022-09-01').outputs.storageURI.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.27.1.19265",
+              "templateHash": "11389652297957888465"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string"
+            },
+            "adminUsername": {
+              "type": "string"
+            },
+            "adminPassword": {
+              "type": "securestring"
+            },
+            "networkInterfaceId": {
+              "type": "string"
+            },
+            "storageAccount_storageUri": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2024-03-01",
+              "name": "bicep_VM",
+              "location": "[parameters('location')]",
+              "properties": {
+                "hardwareProfile": {
+                  "vmSize": "Standard_D2s_v3"
+                },
+                "osProfile": {
+                  "computerName": "computerName",
+                  "adminUsername": "[parameters('adminUsername')]",
+                  "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "Canonical",
+                    "offer": "0001-com-ubuntu-server-jammy",
+                    "sku": "22_04-lts",
+                    "version": "latest"
+                  },
+                  "osDisk": {
+                    "name": "osDisk",
+                    "caching": "ReadWrite",
+                    "createOption": "FromImage"
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[parameters('networkInterfaceId')]"
+                    }
+                  ]
+                },
+                "diagnosticsProfile": {
+                  "bootDiagnostics": {
+                    "enabled": true,
+                    "storageUri": "[parameters('storageAccount_storageUri')]"
+                  }
+                }
+              },
+              "tags": {
+                "Resource_Owner": "Maaz Patel",
+                "Delivery_Manager": "Shriram Deshpande",
+                "Sub_Business_Unit": "PES-IA",
+                "Business_Unit": "Einfochips",
+                "Project_Name": "Training and learning",
+                "Create_Date": "21 May 2024"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'bicep_NIC')]",
+        "[resourceId('Microsoft.Resources/deployments', variables('storageAccountName'))]"
+      ]
+    }
+  ]
+}
